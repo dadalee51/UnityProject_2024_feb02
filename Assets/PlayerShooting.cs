@@ -9,7 +9,7 @@ public class PlayerShooting : MonoBehaviour
     public float laserDuration = 0.1f;
 
     private LineRenderer laserLine;
-
+    Vector3 rotatedDirection;  
     void Start()
     {
         // Create a LineRenderer component for the laser
@@ -19,6 +19,7 @@ public class PlayerShooting : MonoBehaviour
         laserLine.material = new Material(Shader.Find("Standard"));
         laserLine.material.color = laserColor;
         laserLine.enabled = false;
+        
     }
 
     void Update()
@@ -37,9 +38,11 @@ public class PlayerShooting : MonoBehaviour
 
         // Set the starting point of the laser
         laserLine.SetPosition(0, laserStartPoint.position);
-
+        rotatedDirection = laserStartPoint.rotation * transform.right;  
+        //Debug.Log(laserStartPoint.rotation+ ""+ rotatedDirection);
         // Cast a ray in the forward direction to determine the end point of the laser
-        Ray ray = new Ray(laserStartPoint.position, laserStartPoint.forward);
+        Ray ray = new Ray(laserStartPoint.position, rotatedDirection);
+        
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, laserMaxLength))
@@ -52,7 +55,7 @@ public class PlayerShooting : MonoBehaviour
 
                 
             // If the hit object doesn't have a specific component, destroy it directly
-            Destroy(hitObject);
+            //Destroy(hitObject);
         }else{
             // If the ray doesn't hit anything, set the end point based on the max length
             laserLine.SetPosition(1, laserStartPoint.position + laserStartPoint.forward * laserMaxLength);
